@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Skripsi</string>
+
+    <string name="pointofsale">Point Of Sale</string>
+    <string name="dashboard">My Dashboard</string>
+    <string name="kaca">Kaca</string>
+    <string name="pigura">Pigura</string>
+    <string name="kasir">Kasir</string>
+    <string name="data">Data</string>
+    <string name="print">Print</string>
+    <string name="settings">Settings</string>
 </resources>
