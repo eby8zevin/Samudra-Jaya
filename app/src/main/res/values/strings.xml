@@ -12,4 +12,15 @@
 
     <string name="search_here">Search Here. . . .</string>
     <string name="all_product">All Product</string>
+    <string name="product_name">Product Name</string>
+    <string name="buy">Buy</string>
+    <string name="stock">Stock</string>
+    <string name="price">Price</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="failed">Failed</string>
+
+    <string name="no_product_found">No Product Found</string>
+    <string name="want_to_delete_product">Want to Delete Product ?</string>
 </resources>

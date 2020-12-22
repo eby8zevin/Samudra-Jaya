@@ -10,9 +10,8 @@
         android:roundIcon="@mipmap/ic_me_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Skripsi">
-        <activity android:name=".data.AddProductActivity">
-
-        </activity>
+        <activity android:name=".data.EditProductActivity"></activity>
+        <activity android:name=".data.AddProductActivity"></activity>
         <activity android:name=".data.ProductActivity" />
         <activity
             android:name=".DashboardActivity"
