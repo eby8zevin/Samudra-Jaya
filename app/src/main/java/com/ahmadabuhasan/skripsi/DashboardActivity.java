@@ -23,13 +23,12 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        cardViewKaca = findViewById(R.id.card_kaca);
-        cardViewPigura = findViewById(R.id.card_pigura);
-        cardViewKasir = findViewById(R.id.card_kasir);
-        cardViewData = findViewById(R.id.card_data);
+        this.cardViewKaca = findViewById(R.id.card_kaca);
+        this.cardViewPigura = findViewById(R.id.card_pigura);
+        this.cardViewKasir = findViewById(R.id.card_kasir);
+        this.cardViewData = findViewById(R.id.card_data);
         this.cardViewData.setOnClickListener(v -> DashboardActivity.this.startActivity(new Intent(DashboardActivity.this, ProductActivity.class)));
-        cardViewPrint = findViewById(R.id.card_print);
-        cardViewSettings = findViewById(R.id.card_settings);
-
+        this.cardViewPrint = findViewById(R.id.card_print);
+        this.cardViewSettings = findViewById(R.id.card_settings);
     }
 }
