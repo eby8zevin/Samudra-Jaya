@@ -9,10 +9,10 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -149,44 +149,47 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     final ModelSj modelSj = arrayModelSj.get(position);
 
                     final EditText input_stock = new EditText(context);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                    input_stock.setLayoutParams(lp);
 
                     input_stock.setInputType(InputType.TYPE_CLASS_NUMBER);
                     input_stock.setHint("Update Stok Baru");
 
-                    new AlertDialog.Builder(context)
-                            .setView(input_stock)
-                            .setTitle(modelSj.getNamaBarang())
-                            .setMessage("Stok lama: " + modelSj.getStok())
-                            .setCancelable(false)
-                            .setPositiveButton(
-                                    "Yes",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            int edit_id = modelSj.getNo();
-                                            String up_stock = input_stock.getText().toString();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setView(input_stock);
+                    builder.setTitle(modelSj.getNamaBarang());
+                    builder.setMessage("Stok lama: " + modelSj.getStok());
+                    builder.setCancelable(false);
+                    builder.setNeutralButton(
+                            "Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    builder.setPositiveButton(
+                            "Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    int edit_id = modelSj.getNo();
+                                    String up_stock = input_stock.getText().toString();
 
-                                            if (up_stock.isEmpty()) {
-                                                Toast.makeText(context, "Tidak Boleh Kosong !", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                updateData(edit_id, up_stock);
-                                            }
-                                        }
+                                    if (up_stock.isEmpty()) {
+                                        Toast.makeText(context, "Tidak Boleh Kosong !", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        updateData(edit_id, up_stock);
                                     }
-                            )
+                                }
+                            });
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
 
-                            .setNegativeButton(
-                                    "Cancel",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    }
-                            )
-                            .create().show();
+                    Button btnNeutral = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
+                    btnNeutral.setBackgroundColor(Color.RED);
+                    btnNeutral.setTextColor(Color.WHITE);
+
+                    Button btnPositive = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                    btnPositive.setBackgroundColor(Color.BLACK);
+                    btnPositive.setTextColor(Color.WHITE);
                 }
             });
         }
