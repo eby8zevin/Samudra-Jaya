@@ -170,13 +170,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy     HH:mm", locale);
+                                    datetime = simpleDateFormat.format(calendar.getTime());
+                                    
                                     int edit_id = modelSj.getNo();
-                                    String up_stock = input_stock.getText().toString();
+                                    String edit_stock = input_stock.getText().toString();
+                                    String edit_lastupdate = datetime;
 
                                     if (up_stock.isEmpty()) {
                                         Toast.makeText(context, "Tidak Boleh Kosong !", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        updateData(edit_id, up_stock);
+                                        updateData(edit_id, edit_stock, edit_lastupdate);
                                     }
                                 }
                             });
@@ -195,7 +199,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    private void updateData(int id, String stock) {
+    private void updateData(int id, String stock, String lastupdate) {
         String url = ApiClient.URL_UPDATE;
 
         StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
@@ -254,6 +258,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("id", String.valueOf(id));
                 hashMap.put("stock", stock);
+                hashMap.put("lastupdate", lastupdate);
 
                 return hashMap;
             }
