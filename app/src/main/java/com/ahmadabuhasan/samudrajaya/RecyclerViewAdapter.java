@@ -2,19 +2,39 @@ package com.ahmadabuhasan.samudrajaya;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.toolbox.StringRequest;
+import com.google.gson.Gson;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements Filterable {
 
@@ -54,6 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         TextView textView4 = holder.Stok;
         textView4.setText(this.context.getString(R.string.stok) + " : " + modelSj.getStok());
+        textView4.setTextColor(Color.RED);
 
         TextView textView5 = holder.Harga;
         textView5.setText(this.context.getString(R.string.harga) + " : Rp " + NumberFormat.getInstance().format(modelSj.getHarga()));
@@ -120,11 +141,121 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             Suplier = itemView.findViewById(R.id.tv_Suplier);
 
             itemView.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.Q)
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Coming Soon", Toast.LENGTH_SHORT).show();
+                    final int position = getAdapterPosition();
+                    final ModelSj modelSj = arrayModelSj.get(position);
+
+                    final EditText input_stock = new EditText(context);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                    input_stock.setLayoutParams(lp);
+
+                    input_stock.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    input_stock.setHint("Update Stok Baru");
+
+                    new AlertDialog.Builder(context)
+                            .setView(input_stock)
+                            .setTitle(modelSj.getNamaBarang())
+                            .setMessage("Stok lama: " + modelSj.getStok())
+                            .setCancelable(false)
+                            .setPositiveButton(
+                                    "Yes",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            int edit_id = modelSj.getNo();
+                                            String up_stock = input_stock.getText().toString();
+
+                                            if (up_stock.isEmpty()) {
+                                                Toast.makeText(context, "Tidak Boleh Kosong !", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                updateData(edit_id, up_stock);
+                                            }
+                                        }
+                                    }
+                            )
+
+                            .setNegativeButton(
+                                    "Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    }
+                            )
+                            .create().show();
                 }
             });
         }
+    }
+
+    private void updateData(int id, String stock) {
+        String url = ApiClient.URL_UPDATE;
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, response -> {
+
+            ResponStatus responStatus = new Gson().fromJson(response, ResponStatus.class);
+            int status_kode = responStatus.getStatus_kode();
+            String status_pesan = responStatus.getStatus_pesan();
+
+            if (status_kode == 1) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+                MainActivity.mInstance.getData();
+
+            } else if (status_kode == 2) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 3) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 4) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 5) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 6) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 7) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 8) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 9) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else if (status_kode == 10) {
+                Toast.makeText(context, status_pesan, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Status Kesalahan Tidak Diketahui!", Toast.LENGTH_SHORT).show();
+            }
+        }, error -> {
+            // jika respon tidak ditemukan maka akan menampilkan berbagai error berikut ini
+            if (error instanceof TimeoutError) {
+                Toast.makeText(context, "Network TimeoutError", Toast.LENGTH_SHORT).show();
+            } else if (error instanceof NoConnectionError) {
+                Toast.makeText(context, "Nerwork NoConnectionError", Toast.LENGTH_SHORT).show();
+            } else if (error instanceof AuthFailureError) {
+                Toast.makeText(context, "Network AuthFailureError", Toast.LENGTH_SHORT).show();
+            } else if (error instanceof ServerError) {
+                Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
+            } else if (error instanceof NetworkError) {
+                Toast.makeText(context, "Network Error", Toast.LENGTH_SHORT).show();
+            } else if (error instanceof ParseError) {
+                Toast.makeText(context, "Parse Error", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Status Error Tidak Diketahui!", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @NonNull
+            @Override
+            protected Map<String, String> getParams() {
+
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("id", String.valueOf(id));
+                hashMap.put("stock", stock);
+
+                return hashMap;
+            }
+        };
+
+        AppController.getInstance().addToQueue(request, "update_data");
     }
 }
