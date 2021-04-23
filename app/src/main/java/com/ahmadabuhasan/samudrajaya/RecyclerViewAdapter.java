@@ -32,8 +32,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> implements Filterable {
@@ -170,14 +173,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy     HH:mm", locale);
-                                    datetime = simpleDateFormat.format(calendar.getTime());
-                                    
+                                    Calendar calendar;
+                                    calendar = Calendar.getInstance();
+                                    Locale locale = new Locale("id", "ID");
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy     HH:mm", locale);
+
                                     int edit_id = modelSj.getNo();
                                     String edit_stock = input_stock.getText().toString();
-                                    String edit_lastupdate = datetime;
+                                    String edit_lastupdate = simpleDateFormat.format(calendar.getTime());
 
-                                    if (up_stock.isEmpty()) {
+                                    if (edit_stock.isEmpty()) {
                                         Toast.makeText(context, "Tidak Boleh Kosong !", Toast.LENGTH_SHORT).show();
                                     } else {
                                         updateData(edit_id, edit_stock, edit_lastupdate);
@@ -234,7 +239,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Toast.makeText(context, "Status Kesalahan Tidak Diketahui!", Toast.LENGTH_SHORT).show();
             }
         }, error -> {
-            // jika respon tidak ditemukan maka akan menampilkan berbagai error berikut ini
             if (error instanceof TimeoutError) {
                 Toast.makeText(context, "Network TimeoutError", Toast.LENGTH_SHORT).show();
             } else if (error instanceof NoConnectionError) {
